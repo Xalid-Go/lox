@@ -327,8 +327,8 @@ async function performGlobalSearch() {
       
       card.addEventListener('click', () => {
         const imdbId = item.id;
-        // Using embed.su which is extremely stable and fast
-        const embedUrl = `https://embed.su/embed/movie/${imdbId}`;
+        // Using vidsrc.net which supports IMDB IDs and is less likely to be blocked
+        const embedUrl = `https://vidsrc.net/embed/movie?imdb=${imdbId}`;
         
         localStorage.setItem('lox_selected_movie_url', embedUrl);
         localStorage.setItem('lox_selected_movie_title', item.l);
