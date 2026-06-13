@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOX — Премиум Кинотеатр для Друзей</title>
+  <meta name="description" content="LOX — премиальный минималистичный сервис для совместного просмотра фильмов и сериалов с друзьями в реальном времени. Синхронизация воспроизведения, субтитров и живой чат.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Toasts Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- App Wrapper -->
+  <div id="app">
+    
+    <!-- Global Header for Landing & Lobby -->
+    <header class="global-header glass-header" id="global-header">
+      <div class="header-container">
+        <div class="brand-wrap" id="header-logo" style="cursor: pointer;">
+          <h1 class="logo-text">LOX</h1>
+        </div>
+        <nav class="header-nav">
+          <a href="#landing-screen" class="nav-link">Главная</a>
+          <a href="#lobby-screen" class="nav-link">Каталог</a>
+          <button id="btn-nav-admin" class="btn btn-secondary btn-sm"><i class="fa-solid fa-lock"></i> Админ</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- 0. Landing Screen -->
+    <section id="landing-screen" class="screen active">
+      <div class="landing-content">
+        <!-- Hero Section -->
+        <div class="hero-section">
+          <div class="badge-new">Версия 2.0. Сервис полностью переработан</div>
+          <h2 class="hero-title">Кино с друзьями.<br>Синхронно. Эмоционально.</h2>
+          <p class="hero-desc">
+            Полноценная платформа совместного просмотра: HLS-потоки, точечная синхронизация (&lt;50мс), субтитры, голосовой чат и взлетающие реакции. Почувствуйте атмосферу реального кинотеатра.
+          </p>
+          <div class="hero-actions">
+            <button id="btn-start-app" class="btn btn-primary btn-lg">
+              <i class="fa-solid fa-play"></i> Перейти в платформу
+            </button>
+          </div>
+        </div>
+
+        <!-- How It Works Steps -->
+        <div class="steps-section">
+          <div class="step glass">
+            <div class="step-num">1</div>
+            <h4>Создайте комнату</h4>
+            <p>Пара кликов, и вы хост сессии.</p>
+          </div>
+          <div class="step glass">
+            <div class="step-num">2</div>
+            <h4>Поделитесь кодом</h4>
+            <p>Отправьте друзьям 5-значный код.</p>
+          </div>
+          <div class="step glass">
+            <div class="step-num">3</div>
+            <h4>Смотрите вместе</h4>
+            <p>Включайте кино, смейтесь и пишите в чат.</p>
+          </div>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="features-grid">
+          <div class="feature-card glass">
+            <div class="feature-icon-wrap"><i class="fa-solid fa-bolt"></i></div>
+            <h3>Быстрее, чем Zoom</h3>
+            <p>Технология WebSockets гарантирует рассинхрон менее 50 миллисекунд между зрителями по всему миру.</p>
+          </div>
+          
+          <div class="feature-card glass">
+            <div class="feature-icon-wrap"><i class="fa-solid fa-compact-disc"></i></div>
+            <h3>Про плеер</h3>
+            <p>Наш кастомный плеер переваривает HLS-потоки (.m3u8), MP4 и даже умеет парсить видео с Lordfilm.</p>
+          </div>
+
+          <div class="feature-card glass">
+            <div class="feature-icon-wrap"><i class="fa-solid fa-heart"></i></div>
+            <h3>Реакции и эмоции</h3>
+            <p>Общайтесь в чате и обменивайтесь летающими 3D-эмодзи, которые всплывают поверх фильма.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. Lobby Screen (Dashboard) -->
+    <section id="lobby-screen" class="screen">
+      <div class="dashboard-container">
+        
+        <div class="dashboard-hero glass">
+          <div class="dashboard-hero-content">
+            <h2>Добро пожаловать в LOX</h2>
+            <p>Выберите, что вы хотите сделать: стать хостом киновечера или присоединиться к друзьям.</p>
+            <div class="dashboard-actions">
+              <button id="btn-trigger-create" class="btn btn-primary btn-lg"><i class="fa-solid fa-plus"></i> Создать комнату</button>
+              <button id="btn-trigger-join" class="btn btn-secondary btn-lg"><i class="fa-solid fa-arrow-right-to-bracket"></i> Войти по коду</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="catalog-section-header">
+          <h2><i class="fa-solid fa-film"></i> Доступно к просмотру</h2>
+          <p>Фильмы, сериалы и короткометражки из официальной базы сервиса</p>
+        </div>
+
+        <div id="catalog-grid" class="catalog-grid">
+          <!-- Movies render here -->
+        </div>
+        
+        <div class="instructions-card glass">
+          <h3><i class="fa-solid fa-info-circle"></i> Интеграция со сторонними сайтами</h3>
+          <p>Вставьте любую ссылку <code>.m3u8</code> или <code>.mp4</code> прямо в плеер внутри комнаты. Сервис синхронизирует её автоматически.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Room Screen -->
+    <section id="room-screen" class="screen">
+      <header class="room-header glass">
+        <div class="room-logo" id="logo-back-to-lobby">
+          <h2 class="logo-text">LOX</h2>
+        </div>
+        
+        <div class="room-info-badge">
+          <span class="room-code-display">КОД: <strong id="display-room-code">-----</strong></span>
+          <button id="btn-copy-link" class="btn-icon" title="Скопировать ссылку приглашения">
+            <i class="fa-regular fa-copy"></i>
+          </button>
+        </div>
+
+        <div class="room-actions-top">
+          <button id="btn-leave-room" class="btn btn-danger btn-sm">
+            Выйти <i class="fa-solid fa-sign-out"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="room-container">
+        <!-- Video Column -->
+        <div class="video-column">
+          <div class="player-wrapper glass" id="player-wrapper">
+            <div id="html5-player-container" class="player-container active">
+              <video id="video-element" playsinline>
+                <track id="subtitles-track" kind="subtitles" label="Пользовательские" srclang="ru" default>
+              </video>
+              
+              <div id="reactions-overlay" class="reactions-overlay"></div>
+              <div id="big-play-overlay" class="big-play-overlay"><i class="fa-solid fa-play"></i></div>
+
+              <div id="custom-controls" class="custom-controls-bar">
+                <div class="timeline-container" id="custom-progress-container">
+                  <div class="timeline-slider">
+                    <div class="timeline-buffer" id="custom-progress-buffer"></div>
+                    <div class="timeline-current" id="custom-progress-current"></div>
+                    <div class="timeline-handle" id="custom-progress-handle"></div>
+                  </div>
+                </div>
+
+                <div class="controls-row">
+                  <div class="controls-left">
+                    <button class="control-btn" id="custom-play-btn"><i class="fa-solid fa-play"></i></button>
+                    <div class="volume-container">
+                      <button class="control-btn" id="custom-volume-btn"><i class="fa-solid fa-volume-high"></i></button>
+                      <div class="volume-slider-wrap" id="custom-volume-slider-container">
+                        <input type="range" id="custom-volume-slider" min="0" max="1" step="0.05" value="1">
+                      </div>
+                    </div>
+                    <span class="time-display" id="custom-time-display">00:00 / 00:00</span>
+                  </div>
+
+                  <div class="controls-right">
+                    <div class="control-menu-wrapper" id="custom-audio-wrapper" style="display: none;">
+                      <button class="control-btn" id="custom-audio-btn"><i class="fa-solid fa-music"></i></button>
+                      <div class="control-dropdown" id="custom-audio-dropdown"></div>
+                    </div>
+
+                    <div class="control-menu-wrapper">
+                      <button class="control-btn" id="custom-speed-btn"><span id="speed-label">1.0x</span></button>
+                      <div class="control-dropdown" id="custom-speed-dropdown">
+                        <button class="speed-opt" data-speed="0.5">0.5x</button>
+                        <button class="speed-opt active" data-speed="1">1.0x</button>
+                        <button class="speed-opt" data-speed="1.25">1.25x</button>
+                        <button class="speed-opt" data-speed="1.5">1.5x</button>
+                        <button class="speed-opt" data-speed="2">2.0x</button>
+                      </div>
+                    </div>
+
+                    <button class="control-btn" id="custom-subs-btn"><i class="fa-solid fa-closed-captioning"></i></button>
+                    <button class="control-btn" id="custom-fullscreen-btn"><i class="fa-solid fa-expand"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="iframe-player-container" class="player-container">
+              <iframe id="iframe-video-element" src="" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+              <div class="iframe-warning-banner">
+                <i class="fa-solid fa-triangle-exclamation"></i> Встроенный плеер Lordfilm. Синхронизация ограничена.
+              </div>
+            </div>
+            
+            <div class="floating-reactions-bar glass">
+              <button class="reaction-btn" data-reaction="😂">😂</button>
+              <button class="reaction-btn" data-reaction="❤️">❤️</button>
+              <button class="reaction-btn" data-reaction="😮">😮</button>
+              <button class="reaction-btn" data-reaction="😢">😢</button>
+              <button class="reaction-btn" data-reaction="🔥">🔥</button>
+            </div>
+          </div>
+
+          <div class="video-info-card glass">
+            <div class="video-meta">
+              <h2 id="current-movie-title">Ожидание фильма...</h2>
+              <span id="player-type-badge" class="badge">HLS</span>
+            </div>
+
+            <div class="video-loader-form" id="video-change-form">
+              <h3>Панель хоста: загрузить другое видео</h3>
+              <div class="input-row">
+                <input type="text" id="video-url-input" placeholder="Вставьте прямую ссылку (mp4, m3u8) или URL плеера...">
+                <input type="text" id="video-title-input" placeholder="Название фильма...">
+                <button id="btn-load-video" class="btn btn-primary">Включить</button>
+              </div>
+              
+              <div class="subtitles-loader-row mt-15">
+                <label for="subtitles-file-input" class="btn btn-secondary btn-sm">
+                  <i class="fa-solid fa-file-signature"></i> Загрузить субтитры (.srt, .vtt)
+                </label>
+                <input type="file" id="subtitles-file-input" accept=".srt,.vtt" style="display: none;">
+                <span id="subtitles-filename" class="filename-display">Субтитры не загружены</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Column -->
+        <div class="chat-column glass" id="chat-column">
+          <div class="chat-tabs">
+            <button class="tab-btn active" data-tab="tab-chat"><i class="fa-solid fa-comments"></i> Чат</button>
+            <button class="tab-btn" data-tab="tab-users"><i class="fa-solid fa-users"></i> Зрители (<span id="user-count">0</span>)</button>
+          </div>
+
+          <div class="tab-content active" id="tab-chat">
+            <div class="messages-container" id="chat-messages"></div>
+            <div class="typing-indicator-container" id="typing-indicator" style="display: none;"></div>
+            <form id="chat-input-form" class="chat-input-area">
+              <input type="text" id="chat-message-input" placeholder="Напишите сообщение..." autocomplete="off">
+              <button type="submit" class="btn-send" id="btn-send-msg"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+          </div>
+
+          <div class="tab-content" id="tab-users">
+            <ul class="users-list" id="room-users-list"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Admin Panel Screen -->
+    <section id="admin-screen" class="screen">
+      <!-- Admin Content (Same as before, simplified container for length) -->
+      <header class="room-header glass">
+        <div class="room-logo" id="logo-admin-back-to-lobby" style="cursor:pointer;">
+          <h2 class="logo-text">LOX</h2><span class="badge">Admin</span>
+        </div>
+        <div class="room-actions-top">
+          <button id="btn-admin-logout" class="btn btn-secondary btn-sm" style="display: none;">Выйти <i class="fa-solid fa-sign-out-alt"></i></button>
+        </div>
+      </header>
+
+      <div id="admin-login-container" class="lobby-card glass" style="margin-top: 50px;">
+        <h2 style="text-align: center;"><i class="fa-solid fa-shield-halved"></i> Панель управления</h2>
+        <div class="form-group mt-15">
+          <label>Логин</label>
+          <input type="text" id="admin-username-input" placeholder="admin">
+        </div>
+        <div class="form-group">
+          <label>Пароль</label>
+          <input type="password" id="admin-password-input" placeholder="admin123">
+        </div>
+        <button id="btn-admin-login" class="btn btn-primary w-100">Войти в панель</button>
+      </div>
+
+      <div id="admin-dashboard-container" class="admin-dashboard-container" style="display: none; padding: 30px 20px; max-width: 1200px; margin: 0 auto;">
+        <div class="admin-stats-row">
+          <div class="stat-widget glass">
+            <span class="stat-title">Активные комнаты</span><span class="stat-value" id="stat-rooms-count">0</span>
+          </div>
+          <div class="stat-widget glass">
+            <span class="stat-title">Активные зрители</span><span class="stat-value" id="stat-users-count">0</span>
+          </div>
+          <div class="stat-widget glass">
+            <span class="stat-title">Фильмов в базе</span><span class="stat-value" id="stat-catalog-count">0</span>
+          </div>
+        </div>
+
+        <div class="admin-grid">
+          <div class="admin-tabs-nav glass">
+            <button class="admin-tab-btn active" data-admin-tab="admin-rooms">Комнаты</button>
+            <button class="admin-tab-btn" data-admin-tab="admin-catalog">Каталог</button>
+            <button class="admin-tab-btn" data-admin-tab="admin-settings">Настройки</button>
+          </div>
+
+          <div class="admin-tabs-content-wrapper glass">
+            <div class="admin-tab-content active" id="admin-rooms">
+              <h3>Активные сессии</h3>
+              <table class="admin-table">
+                <thead><tr><th>Код</th><th>Хост</th><th>Зрителей</th><th>Видео</th><th>Действие</th></tr></thead>
+                <tbody id="admin-rooms-tbody"></tbody>
+              </table>
+            </div>
+
+            <div class="admin-tab-content" id="admin-catalog">
+              <h3>Управление каталогом</h3>
+              <form id="admin-add-movie-form" class="admin-form mb-15">
+                <div class="form-row">
+                  <div class="form-group flex-1"><input type="text" id="new-movie-title" placeholder="Название" required></div>
+                  <div class="form-group" style="width:80px;"><input type="text" id="new-movie-rating" placeholder="IMDb" required></div>
+                  <div class="form-group" style="width:150px;">
+                    <select id="new-movie-type" class="admin-select">
+                      <option value="hls">HLS</option><option value="mp4">MP4</option><option value="iframe">Iframe</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group"><input type="text" id="new-movie-url" placeholder="URL видео" required></div>
+                <div class="form-group"><input type="text" id="new-movie-poster" placeholder="URL обложки"></div>
+                <div class="form-group"><textarea id="new-movie-desc" placeholder="Описание" rows="2"></textarea></div>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Добавить</button>
+              </form>
+              <hr class="admin-divider">
+              <table class="admin-table">
+                <thead><tr><th>Название</th><th>Тип</th><th>Управление</th></tr></thead>
+                <tbody id="admin-catalog-tbody"></tbody>
+              </table>
+            </div>
+
+            <div class="admin-tab-content" id="admin-settings">
+              <h3>Сменить пароль</h3>
+              <form id="admin-settings-form" class="admin-form">
+                <div class="form-group"><input type="text" id="settings-username-input" placeholder="Новый логин"></div>
+                <div class="form-group"><input type="password" id="settings-password-input" placeholder="Новый пароль"></div>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Сохранить</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p class="copyright">LOX &copy; 2026. Платформа премиум-класса.</p>
+        <p class="created-by">
+          Создано <span class="creator-name">Халидом</span> | 
+          <a href="https://t.me/xaiid77" target="_blank" rel="noopener noreferrer" class="creator-link">
+            <i class="fa-brands fa-telegram"></i> @xaiid77
+          </a>
+        </p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Modals -->
+  <div class="modal-overlay" id="modal-create-room">
+    <div class="modal-box glass">
+      <button class="btn-close-modal" id="close-create-modal"><i class="fa-solid fa-times"></i></button>
+      <h3>Создать комнату</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Вы станете администратором (хостом) комнаты.</p>
+      <div class="form-group">
+        <label>Ваше имя</label>
+        <input type="text" id="modal-nickname-create" placeholder="Введите никнейм..." maxlength="20">
+      </div>
+      <button id="btn-modal-create" class="btn btn-primary w-100"><i class="fa-solid fa-play"></i> Создать</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-join-room">
+    <div class="modal-box glass">
+      <button class="btn-close-modal" id="close-join-modal"><i class="fa-solid fa-times"></i></button>
+      <h3>Войти в комнату</h3>
+      <div class="form-group mt-15">
+        <label>Ваше имя</label>
+        <input type="text" id="modal-nickname-join" placeholder="Введите никнейм..." maxlength="20">
+      </div>
+      <div class="form-group">
+        <label>Код комнаты</label>
+        <input type="text" id="modal-code-join" placeholder="00000" maxlength="5" style="letter-spacing: 5px; text-align: center; font-size: 1.2rem; font-weight: bold;">
+      </div>
+      <button id="btn-modal-join" class="btn btn-secondary w-100">Присоединиться <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
