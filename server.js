@@ -208,9 +208,9 @@ app.get('/api/search', async (req, res) => {
     return res.json({ d: [] });
   }
   try {
-    const cleanQuery = query.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim().replace(/\s+/g, '_');
-    const firstLetter = cleanQuery.charAt(0) || 'a';
-    const url = `https://v2.sg.media-imdb.com/suggestion/${firstLetter}/${cleanQuery}.json`;
+    const cleanQuery = query.toLowerCase().trim().replace(/\s+/g, '_');
+    const firstLetter = cleanQuery.charAt(0);
+    const url = `https://v2.sg.media-imdb.com/suggestion/${encodeURIComponent(firstLetter)}/${encodeURIComponent(cleanQuery)}.json`;
     
     const response = await fetch(url);
     if (!response.ok) {
