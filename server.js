@@ -199,6 +199,31 @@ app.post('/api/admin/settings', adminAuth, async (req, res) => {
   return res.json({ message: 'Настройки входа успешно изменены.' });
 });
 
+// ==========================================
+// GLOBAL MOVIE SEARCH (IMDB PROXY)
+// ==========================================
+app.get('/api/search', async (req, res) => {
+  const query = req.query.q;
+  if (!query || query.length < 2) {
+    return res.json({ d: [] });
+  }
+  try {
+    const cleanQuery = query.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim().replace(/\s+/g, '_');
+    const firstLetter = cleanQuery.charAt(0) || 'a';
+    const url = `https://v2.sg.media-imdb.com/suggestion/${firstLetter}/${cleanQuery}.json`;
+    
+    const response = await fetch(url);
+    if (!response.ok) {
+      return res.status(500).json({ error: 'IMDB API Error' });
+    }
+    const data = await response.json();
+    return res.json(data);
+  } catch (error) {
+    console.error('Search error:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Fallback for SPA routing
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));

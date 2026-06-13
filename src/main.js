@@ -278,6 +278,92 @@ function renderCatalog(movies) {
   });
 }
 
+// ==========================================
+// Global Movie Search Logic
+// ==========================================
+let searchTimeout = null;
+
+async function performGlobalSearch() {
+  const inputEl = document.getElementById('global-search-input');
+  if (!inputEl) return;
+  
+  const query = inputEl.value.trim();
+  const resultsGrid = document.getElementById('global-search-results');
+  if (!resultsGrid) return;
+  
+  if (!query || query.length < 2) {
+    resultsGrid.innerHTML = '';
+    return;
+  }
+  
+  resultsGrid.innerHTML = '<div class="search-loading"><i class="fa-solid fa-spinner fa-spin"></i> Поиск в базе IMDB...</div>';
+  
+  try {
+    const res = await fetch(`${socketUrl}/api/search?q=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    
+    if (!data.d || data.d.length === 0) {
+      resultsGrid.innerHTML = '<div class="search-loading">Ничего не найдено. Попробуйте написать оригинальное название (на англ).</div>';
+      return;
+    }
+    
+    resultsGrid.innerHTML = '';
+    
+    data.d.forEach(item => {
+      if (!item.q && !item.id.startsWith('tt')) return; // Ensure it's a title, not a person
+      
+      const card = document.createElement('div');
+      card.className = 'search-movie-card';
+      
+      const posterUrl = item.i && item.i.imageUrl ? item.i.imageUrl : '';
+      
+      card.innerHTML = `
+        <img class="search-movie-poster" src="${posterUrl}" onerror="this.src='';this.style.background='#222';">
+        <div class="search-movie-info">
+          <div class="search-movie-title">${item.l}</div>
+          <div class="search-movie-year">${item.y || 'Н/Д'} • IMDB</div>
+        </div>
+      `;
+      
+      card.addEventListener('click', () => {
+        const imdbId = item.id;
+        // Using vidsrc.to which accepts IMDB IDs directly and embeds the video player
+        const embedUrl = `https://vidsrc.to/embed/movie/${imdbId}`;
+        
+        localStorage.setItem('lox_selected_movie_url', embedUrl);
+        localStorage.setItem('lox_selected_movie_title', item.l);
+        localStorage.setItem('lox_selected_movie_type', 'iframe');
+        
+        openModal(document.getElementById('modal-create-room'));
+      });
+      
+      resultsGrid.appendChild(card);
+    });
+    
+  } catch (err) {
+    console.error(err);
+    resultsGrid.innerHTML = '<div class="search-loading" style="color: var(--danger);">Ошибка соединения.</div>';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('global-search-input');
+  const searchBtn = document.getElementById('btn-global-search');
+  
+  if (searchInput && searchBtn) {
+    searchBtn.addEventListener('click', performGlobalSearch);
+    searchInput.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') {
+        clearTimeout(searchTimeout);
+        performGlobalSearch();
+      } else {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(performGlobalSearch, 600);
+      }
+    });
+  }
+});
+
 // Auto-fill room code from query params
 function checkUrlParams() {
   const urlParams = new URLSearchParams(window.location.search);

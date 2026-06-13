@@ -114,6 +114,18 @@
           </div>
         </div>
 
+        <div class="global-search-container glass" style="margin-bottom: 40px; padding: 30px;">
+          <div class="search-header" style="margin-bottom: 15px;">
+            <h3><i class="fa-solid fa-magnifying-glass" style="color: var(--primary);"></i> Найти абсолютно любой фильм</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 5px;">База IMDB. Напишите оригинальное название, выберите фильм, и мы мгновенно найдем его источник.</p>
+          </div>
+          <div class="search-input-wrap" style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <input type="text" id="global-search-input" placeholder="Например: Inception, Avatar, Breaking Bad..." autocomplete="off" style="flex: 1; padding: 14px 20px; border-radius: var(--radius-sm); border: 1px solid var(--border-glass); background: rgba(0,0,0,0.4); color: #fff; font-size: 1rem;">
+            <button id="btn-global-search" class="btn btn-primary"><i class="fa-solid fa-search"></i> Найти</button>
+          </div>
+          <div id="global-search-results" class="search-results-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;"></div>
+        </div>
+
         <div class="catalog-section-header">
           <h2><i class="fa-solid fa-film"></i> Доступно к просмотру</h2>
           <p>Фильмы, сериалы и короткометражки из официальной базы сервиса</p>
